@@ -1,0 +1,28 @@
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\bin\Debug\GOMOKU_SERVER_APP.exe.config
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\bin\Debug\GOMOKU_SERVER_APP.exe
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\bin\Debug\GOMOKU_SERVER_APP.pdb
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csprojAssemblyReference.cache
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.Properties.Resources.resources
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csproj.GenerateResource.cache
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csproj.CoreCompileInputs.cache
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.exe
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.pdb
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.Form1.resources
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\bin\Debug\SocketManager.dll
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\bin\Debug\SocketManager.pdb
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csproj.CopyComplete
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\bin\Debug\SocketData.dll
+W:\Visual Studio Project\C#\NP\GOMOKU_SERVER_APP\GOMOKU_SERVER_APP\bin\Debug\SocketData.pdb
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\bin\Debug\GOMOKU_SERVER_APP.exe.config
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\bin\Debug\GOMOKU_SERVER_APP.exe
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\bin\Debug\GOMOKU_SERVER_APP.pdb
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\bin\Debug\SocketData.pdb
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\bin\Debug\SocketManager.pdb
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csprojAssemblyReference.cache
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.Form1.resources
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.Properties.Resources.resources
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csproj.GenerateResource.cache
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csproj.CoreCompileInputs.cache
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.csproj.CopyComplete
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.exe
+C:\Users\TruongNhim\Desktop\BTL_LTM\Server\GOMOKU_SERVER_APP-master\GOMOKU_SERVER_APP\obj\Debug\GOMOKU_SERVER_APP.pdb
