@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pnlLog = new System.Windows.Forms.Panel();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.pnlPlayer = new System.Windows.Forms.Panel();
@@ -44,7 +45,7 @@
             this.pnlLog.Controls.Add(this.tbLog);
             this.pnlLog.Location = new System.Drawing.Point(12, 37);
             this.pnlLog.Name = "pnlLog";
-            this.pnlLog.Size = new System.Drawing.Size(404, 282);
+            this.pnlLog.Size = new System.Drawing.Size(404, 245);
             this.pnlLog.TabIndex = 0;
             this.pnlLog.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -55,7 +56,8 @@
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.tbLog.Size = new System.Drawing.Size(398, 276);
+            this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbLog.Size = new System.Drawing.Size(398, 238);
             this.tbLog.TabIndex = 0;
             this.tbLog.UseWaitCursor = true;
             this.tbLog.TextChanged += new System.EventHandler(this.tbLog_TextChanged);
@@ -118,10 +120,11 @@
             this.Controls.Add(this.btnStartServer);
             this.Controls.Add(this.pnlPlayer);
             this.Controls.Add(this.pnlLog);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "GOMOKU SERVER";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlLog.ResumeLayout(false);
             this.pnlLog.PerformLayout();
             this.pnlPlayer.ResumeLayout(false);

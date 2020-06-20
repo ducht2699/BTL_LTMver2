@@ -36,11 +36,16 @@
     <ApplicationIcon>caro.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SocketData">
-      <HintPath>..\..\SocketData\SocketData\bin\Debug\SocketData.dll</HintPath>
+    <Reference Include="CurrentTime">
+      <HintPath>W:\University\Studying Program\20192\Network Programming\BTL\Mine\CurrentTime\CurrentTime\bin\Debug\CurrentTime.dll</HintPath>
     </Reference>
-    <Reference Include="SocketManager">
-      <HintPath>..\..\SocketManager\SocketManager\bin\Debug\SocketManager.dll</HintPath>
+    <Reference Include="SocketData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>W:\University\Studying Program\20192\Network Programming\BTL\Mine\SocketData\SocketData\bin\Debug\SocketData.dll</HintPath>
+    </Reference>
+    <Reference Include="SocketManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>W:\University\Studying Program\20192\Network Programming\BTL\Mine\SocketManager\SocketManager\bin\Debug\SocketManager.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,7 +69,6 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Player.cs" />
-    <Compile Include="PlayInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -104,6 +108,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="caro.ico" />
+    <None Include="Resources\super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9-fullview1.jpg" />
+    <None Include="Resources\super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9-fullview.jpg" />
     <None Include="Resources\XPlayer.png" />
     <None Include="Resources\OPlayer.png" />
     <None Include="Resources\caro main .png" />

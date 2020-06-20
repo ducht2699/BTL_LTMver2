@@ -1,4 +1,5 @@
-﻿using SocketDataNameSpace;
+﻿using CurrentTimeNameSpace;
+using SocketDataNameSpace;
 using SocketManagerNamespace;
 using System;
 using System.Collections;
@@ -14,6 +15,8 @@ namespace GOMOKU_SERVER_APP
     public partial class Form1 : Form
     {
         #region Properties
+
+        private CurrentTime time = new CurrentTime();
 
         //tao mang luu tru thong tin nguoi choi
         public static ArrayList playerList = new ArrayList();
@@ -46,10 +49,6 @@ namespace GOMOKU_SERVER_APP
         {
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-        }
-
         private void tbLog_TextChanged(object sender, EventArgs e)
         {
         }
@@ -70,7 +69,7 @@ namespace GOMOKU_SERVER_APP
                     //listen
                     listener.Start();
 
-                    tbLog.AppendText("Server started!!!");
+                    tbLog.AppendText("[" + time.getCurrentTime() + "]: Server started!!!");
 
                     //dieu chinh giao dien
 
@@ -82,16 +81,20 @@ namespace GOMOKU_SERVER_APP
                         while (true)
                         {
                             Socket newClient = listener.AcceptSocket();
-                            tbLog.AppendText("\r\nnewclient: " + newClient.RemoteEndPoint);
 
                             //tao nguoi choi moi
                             SocketManager temp = new SocketManager();
                             temp.client = newClient;
+
+                            //lay ten cua nguoi choi
+                            SocketData playerData = (SocketData)temp.Receive();
+
                             player newPlayer = new player();
                             newPlayer.Player1Socket = temp;
+                            newPlayer.Player1Socket.playerName = playerData.PlayerName;
                             newPlayer.Status = "WAITING";
                             newPlayer.Player2Socket = null;
-
+                            
                             //xu ly nguoi choi
                             if (addPlayer(newPlayer))
                             {
@@ -103,7 +106,7 @@ namespace GOMOKU_SERVER_APP
                             else
                             {
                                 //thong bao va ngat ket noi client
-                                newPlayer.Player1Socket.Send(new SocketData((int)SocketCommand.NOTIFY, "Lỗi kết nối! Mời kết nối lại!", new Point()));
+                                newPlayer.Player1Socket.Send(new SocketData("", newPlayer.Player1Socket.playerName, (int)SocketCommand.SERVER_OUT, "Lỗi kết nối, mời thử lại!", new Point()));
                                 newClient.Close();
                             }
                         }
@@ -155,28 +158,28 @@ namespace GOMOKU_SERVER_APP
                             {
                                 playerTemp1.Status = "MATCHED2";
                                 playerTemp1.Player2Socket = playerTemp.Player1Socket;
-                                tbLog.AppendText("\r\n" + playerTemp1.Player2Socket.client.RemoteEndPoint + " matched to  " + playerTemp1.Player1Socket.client.RemoteEndPoint);
+                                tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + playerTemp1.Player2Socket.client.RemoteEndPoint + " - " + playerTemp1.Player2Socket.playerName + "  matched to  " + playerTemp1.Player1Socket.client.RemoteEndPoint + " - " + playerTemp1.Player1Socket.playerName);
                                 break;
                             }
                         }
-
                         break;
                     }
                 }
 
                 if (!checkMatch)
                 {
-                    tbLog.AppendText("\r\n" + newPlayer.Player1Socket.client.RemoteEndPoint + " WAITING...");
+                    
+                    tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + newPlayer.Player1Socket.client.RemoteEndPoint + " - " + newPlayer.Player1Socket.playerName + " WAITING...");
                 }
                 //thong bao cho client
                 if (newPlayer.Status == "WAITING")
                 {
-                    newPlayer.Player1Socket.Send(new SocketData((int)SocketCommand.WAITING, "Đã kết nối đến server!", new Point()));
+                    newPlayer.Player1Socket.Send(new SocketData(newPlayer.Player1Socket.client.RemoteEndPoint.ToString(), newPlayer.Player1Socket.playerName, (int)SocketCommand.WAITING, "Chờ đối thủ!", new Point()));
                 }
                 else if (newPlayer.Status == "MATCHED2")
                 {
-                    newPlayer.Player1Socket.Send(new SocketData((int)SocketCommand.PLAYER2, "Đã kết nối với\r\n" + newPlayer.Player2Socket.client.RemoteEndPoint + "\r\nChờ đối thủ đánh trước!", new Point()));
-                    newPlayer.Player2Socket.Send(new SocketData((int)SocketCommand.PLAYER1, "Đã kết nối với\r\n" + newPlayer.Player1Socket.client.RemoteEndPoint + "\r\nMời bạn đánh trước!", new Point()));
+                    newPlayer.Player1Socket.Send(new SocketData(newPlayer.Player1Socket.client.RemoteEndPoint.ToString(), newPlayer.Player1Socket.playerName, (int)SocketCommand.PLAYER2, "Đã kết nối với \"" + newPlayer.Player2Socket.playerName + "\", chờ đối thủ đánh trước!", new Point()));
+                    newPlayer.Player2Socket.Send(new SocketData(newPlayer.Player2Socket.client.RemoteEndPoint.ToString(), newPlayer.Player2Socket.playerName, (int)SocketCommand.PLAYER1, "Đã kết nối với \"" + newPlayer.Player1Socket.playerName + "\", mời bạn đánh trước!", new Point()));
                 }
             }
             catch (Exception)
@@ -187,6 +190,7 @@ namespace GOMOKU_SERVER_APP
         private void matchPlayerAfter(player newPlayer)
         {
             bool checkMatch = false;
+
             try
             {
                 //tim va luu thong tin doi thu
@@ -207,7 +211,7 @@ namespace GOMOKU_SERVER_APP
                             {
                                 playerTemp1.Status = "MATCHED2";
                                 playerTemp1.Player2Socket = playerTemp.Player1Socket;
-                                tbLog.AppendText("\r\n" + playerTemp1.Player2Socket.client.RemoteEndPoint + " matched to  " + playerTemp1.Player1Socket.client.RemoteEndPoint);
+                                tbLog.AppendText("[" + time.getCurrentTime() + "]: \r\n" + playerTemp1.Player2Socket.client.RemoteEndPoint + " - " + playerTemp1.Player2Socket.playerName + "  matched to  " + playerTemp1.Player1Socket.client.RemoteEndPoint + " - " + playerTemp1.Player1Socket.playerName);
                                 break;
                             }
                         }
@@ -215,16 +219,17 @@ namespace GOMOKU_SERVER_APP
                         break;
                     }
                 }
+
                 if (!checkMatch)
                 {
-                    tbLog.AppendText("\r\n" + newPlayer.Player1Socket.client.RemoteEndPoint + " WAITING...");
+                    tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + newPlayer.Player1Socket.client.RemoteEndPoint + " - " + newPlayer.Player1Socket.playerName + " WAITING...");
                 }
 
                 //thong bao cho client
                 if (newPlayer.Status == "MATCHED2")
                 {
-                    newPlayer.Player1Socket.Send(new SocketData((int)SocketCommand.PLAYER2, "Đã kết nối với\r\n" + newPlayer.Player2Socket.client.RemoteEndPoint + "\r\nChờ đối thủ đánh trước!", new Point()));
-                    newPlayer.Player2Socket.Send(new SocketData((int)SocketCommand.PLAYER1, "Đã kết nối với\r\n" + newPlayer.Player1Socket.client.RemoteEndPoint + "\r\nMời bạn đánh trước!", new Point()));
+                    newPlayer.Player1Socket.Send(new SocketData(newPlayer.Player1Socket.client.RemoteEndPoint.ToString(), newPlayer.Player1Socket.playerName, (int)SocketCommand.PLAYER2, "Đã kết nối với \"" + newPlayer.Player2Socket.playerName + "\", chờ đối thủ đánh trước!", new Point()));
+                    newPlayer.Player2Socket.Send(new SocketData(newPlayer.Player2Socket.client.RemoteEndPoint.ToString(), newPlayer.Player2Socket.playerName, (int)SocketCommand.PLAYER1, "Đã kết nối với \"" + newPlayer.Player1Socket.playerName + "\", mời bạn đánh trước!", new Point()));
                 }
             }
             catch (Exception)
@@ -246,10 +251,11 @@ namespace GOMOKU_SERVER_APP
                 //add nguoi choi
                 numPlayer++;
                 playerList.Add(newPlayer);
-
-                //xu ly trang thai
+                tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: new player: " + newPlayer.Player1Socket.client.RemoteEndPoint);
                 matchPlayer(newPlayer);
-                lbPlayer.Items.Add(newPlayer.Player1Socket.client.RemoteEndPoint.ToString());
+                //xu ly trang thai
+
+                lbPlayer.Items.Add(newPlayer.Player1Socket.client.RemoteEndPoint.ToString() + " - " + newPlayer.Player1Socket.playerName);
             }
             return check;
         }
@@ -265,7 +271,7 @@ namespace GOMOKU_SERVER_APP
                     {
                         curPlayer.Status = "WAITING";
                         //gui cho doi thu
-                        curPlayer.Player1Socket.Send(new SocketData((int)SocketCommand.QUIT, curPlayer.Player2Socket.client.RemoteEndPoint + "\r\n đã thoát!", new Point()));
+                        curPlayer.Player1Socket.Send(new SocketData("", curPlayer.Player1Socket.playerName, (int)SocketCommand.QUIT, curPlayer.Player2Socket.playerName + " đã thoát! Chờ đối thủ khác!", new Point()));
 
                         curPlayer.Player2Socket = null;
                         matchPlayerAfter(curPlayer);
@@ -274,14 +280,13 @@ namespace GOMOKU_SERVER_APP
                 }
             }
 
-            //ngat ket noi
-            deletePlayer.Player1Socket.client.Close();
-
-            //xoa khoi danh sach
             foreach (player curPlayer in playerList)
             {
                 if (curPlayer == deletePlayer)
                 {
+                    //ngat ket noi
+                    deletePlayer.Player1Socket.client.Close();
+                    //xoa khoi danh sach
                     playerList.Remove(curPlayer);
                     numPlayer--;
                     break;
@@ -305,10 +310,10 @@ namespace GOMOKU_SERVER_APP
                     if (temp.Command == (int)SocketCommand.QUIT)
                     {
                         //cap nhat giao dien
-                        tbLog.AppendText("\r\n" + newPlayer.Player1Socket.client.RemoteEndPoint + " QUIT!!!");
+                        tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + newPlayer.Player1Socket.client.RemoteEndPoint + " - " + newPlayer.Player1Socket.playerName + " QUIT!!!");
                         foreach (String item in lbPlayer.Items)
                         {
-                            if (item == newPlayer.Player1Socket.client.RemoteEndPoint.ToString())
+                            if (item == newPlayer.Player1Socket.client.RemoteEndPoint.ToString() + " - " + newPlayer.Player1Socket.playerName)
                             {
                                 lbPlayer.Items.Remove(item);
                                 //xoa khoi danh sach
@@ -319,8 +324,8 @@ namespace GOMOKU_SERVER_APP
                     }
                     else if (temp.Command == (int)SocketCommand.END_GAME)
                     {
-                        newPlayer.Player2Socket.Send(new SocketData((int)SocketCommand.END_GAME, "Đã 5 con trên một hàng\r\n" + newPlayer.Player1Socket.client.RemoteEndPoint.ToString() + "\r\nWIN!!!", new Point()));
-                        newPlayer.Player1Socket.Send(new SocketData((int)SocketCommand.END_GAME, "Đã 5 con trên một hàng\r\n" + newPlayer.Player1Socket.client.RemoteEndPoint.ToString() + "\r\nWIN!!!", new Point()));
+                        newPlayer.Player2Socket.Send(new SocketData("", newPlayer.Player1Socket.playerName, (int)SocketCommand.END_GAME, "Đã 5 con trên một hàng, " + newPlayer.Player1Socket.playerName + " WIN!!!", new Point()));
+                        newPlayer.Player1Socket.Send(new SocketData("", newPlayer.Player2Socket.playerName, (int)SocketCommand.END_GAME, "Đã 5 con trên một hàng, " + newPlayer.Player1Socket.playerName + " WIN!!!", new Point()));
                     }
                     else
                     {
@@ -336,14 +341,13 @@ namespace GOMOKU_SERVER_APP
 
         private void StopServer()
         {
-            tbLog.AppendText("\r\nServer stopped!!!\r\n");
+            tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: Server stopped!!!\r\n");
             try
             {
                 //gui tin nhan
                 foreach (player playerTemp1 in playerList)
                 {
-                    SocketData temp = new SocketData((int)SocketCommand.SERVER_OUT, "Server đã tắt, bạn bị ngắt kết nối", new Point());
-                    playerTemp1.Player1Socket.Send(temp);
+                    playerTemp1.Player1Socket.Send(new SocketData("", playerTemp1.Player1Socket.playerName, (int)SocketCommand.SERVER_OUT, "Server đã tắt, bạn bị ngắt kết nối", new Point()));
                     playerTemp1.Player1Socket.client.Close();
                 }
                 playerList.Clear();
@@ -359,12 +363,11 @@ namespace GOMOKU_SERVER_APP
             }
         }
 
-
-
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (isRunning)
             {
+                StopServer();
                 listener.Stop();
             }
         }

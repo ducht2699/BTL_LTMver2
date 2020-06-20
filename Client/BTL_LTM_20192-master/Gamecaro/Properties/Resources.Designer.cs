@@ -103,6 +103,26 @@ namespace Gamecaro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9_fullview {
+            get {
+                object obj = ResourceManager.GetObject("super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9-fullview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9_fullview1 {
+            get {
+                object obj = ResourceManager.GetObject("super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9-fullview1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap X_image {
             get {
                 object obj = ResourceManager.GetObject("X_image", resourceCulture);
