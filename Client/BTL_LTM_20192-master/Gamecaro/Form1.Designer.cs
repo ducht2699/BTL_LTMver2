@@ -42,16 +42,16 @@
             this.btnSendChat = new System.Windows.Forms.Button();
             this.btnLAN = new System.Windows.Forms.Button();
             this.txbIP = new System.Windows.Forms.TextBox();
+            this.pctbMark = new System.Windows.Forms.PictureBox();
             this.txbPlayerName = new System.Windows.Forms.TextBox();
             this.tmCoolDown = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pctbMark = new System.Windows.Forms.PictureBox();
             this.panel3.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbMark)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlChessBoard
@@ -187,6 +187,18 @@
             this.txbIP.Text = "127.0.0.1";
             this.txbIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // pctbMark
+            // 
+            this.pctbMark.BackColor = System.Drawing.SystemColors.Control;
+            this.pctbMark.Image = global::Gamecaro.Properties.Resources.super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9_fullview1;
+            this.pctbMark.Location = new System.Drawing.Point(2, 2);
+            this.pctbMark.Margin = new System.Windows.Forms.Padding(2);
+            this.pctbMark.Name = "pctbMark";
+            this.pctbMark.Size = new System.Drawing.Size(68, 68);
+            this.pctbMark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pctbMark.TabIndex = 0;
+            this.pctbMark.TabStop = false;
+            // 
             // txbPlayerName
             // 
             this.txbPlayerName.Location = new System.Drawing.Point(114, 2);
@@ -234,18 +246,6 @@
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
-            // pctbMark
-            // 
-            this.pctbMark.BackColor = System.Drawing.SystemColors.Control;
-            this.pctbMark.Image = global::Gamecaro.Properties.Resources.super_mario_flat_design_wallpaper_by_ivanomatt147_d9qvku9_fullview1;
-            this.pctbMark.Location = new System.Drawing.Point(2, 2);
-            this.pctbMark.Margin = new System.Windows.Forms.Padding(2);
-            this.pctbMark.Name = "pctbMark";
-            this.pctbMark.Size = new System.Drawing.Size(68, 68);
-            this.pctbMark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pctbMark.TabIndex = 0;
-            this.pctbMark.TabStop = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -254,6 +254,7 @@
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.pnlChessBoard);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -261,12 +262,13 @@
             this.Name = "Form1";
             this.Text = "Caro";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pctbMark)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pctbMark)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

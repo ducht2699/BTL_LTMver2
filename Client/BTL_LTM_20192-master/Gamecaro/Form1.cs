@@ -84,6 +84,7 @@ namespace Gamecaro
             NewGame();
             socket.Send(new SocketData("", txbPlayerName.Text, (int)SocketCommand.NEW_GAME, "", new Point()));
             pnlChessBoard.Enabled = true;
+            newGameToolStripMenuItem.Enabled = false;
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -110,7 +111,7 @@ namespace Gamecaro
 
         private void btnLAN_Click(object sender, EventArgs e)
         {
-            if (!isConnect && txbPlayerName.Text != "")
+            if (!isConnect && txbPlayerName.Text != "" && txbPlayerName.Text != "[SERVER]")
             {
                 if (!socket.ConnectServer())
                 {
@@ -137,9 +138,9 @@ namespace Gamecaro
                     btnSendChat.Enabled = true;
                 }
             }
-            else if (!isConnect && txbPlayerName.Text == "")
+            else if (!isConnect && txbPlayerName.Text == "" || txbPlayerName.Text == "[SERVER]")
             {
-                MessageBox.Show("Mời nhập tên người chơi trước");
+                MessageBox.Show("Tên Lỗi, mời nhập lại!");
             }
             else
             {
@@ -252,6 +253,8 @@ namespace Gamecaro
                         newGameToolStripMenuItem.Enabled = false;
                         pctbMark.Image = Image.FromFile(Application.StartupPath + "\\Resources\\XPlayer.png");
                         txbIP.Text = data.PlayerSocket;
+                        tbChat.Enabled = true;
+                        btnSendChat.Enabled = true;
                     }));
 
                     break;
@@ -293,6 +296,8 @@ namespace Gamecaro
                     tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + data.Message);
                     pnlChessBoard.Enabled = false;
                     newGameToolStripMenuItem.Enabled = true;
+                    tbChat.Enabled = true;
+                    btnSendChat.Enabled = true;
                     break;
 
                 case (int)SocketCommand.QUIT:
@@ -309,6 +314,9 @@ namespace Gamecaro
             Listen();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 }

@@ -36,6 +36,9 @@
             this.btnStartServer = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.btnSend = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.tbChat = new System.Windows.Forms.TextBox();
             this.pnlLog.SuspendLayout();
             this.pnlPlayer.SuspendLayout();
             this.SuspendLayout();
@@ -52,14 +55,15 @@
             // tbLog
             // 
             this.tbLog.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbLog.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tbLog.Location = new System.Drawing.Point(3, 3);
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
+            this.tbLog.ReadOnly = true;
             this.tbLog.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbLog.Size = new System.Drawing.Size(398, 238);
             this.tbLog.TabIndex = 0;
-            this.tbLog.UseWaitCursor = true;
             this.tbLog.TextChanged += new System.EventHandler(this.tbLog_TextChanged);
             // 
             // pnlPlayer
@@ -73,21 +77,23 @@
             // lbPlayer
             // 
             this.lbPlayer.FormattingEnabled = true;
-            this.lbPlayer.Location = new System.Drawing.Point(3, 3);
+            this.lbPlayer.Location = new System.Drawing.Point(4, 3);
             this.lbPlayer.MultiColumn = true;
             this.lbPlayer.Name = "lbPlayer";
             this.lbPlayer.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbPlayer.Size = new System.Drawing.Size(128, 238);
             this.lbPlayer.TabIndex = 0;
+            this.lbPlayer.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbPlayer_KeyDown);
             // 
             // btnStartServer
             // 
-            this.btnStartServer.Location = new System.Drawing.Point(422, 284);
+            this.btnStartServer.BackColor = System.Drawing.Color.LimeGreen;
+            this.btnStartServer.Location = new System.Drawing.Point(12, 284);
             this.btnStartServer.Name = "btnStartServer";
-            this.btnStartServer.Size = new System.Drawing.Size(128, 32);
+            this.btnStartServer.Size = new System.Drawing.Size(128, 30);
             this.btnStartServer.TabIndex = 2;
             this.btnStartServer.Text = "Start Server";
-            this.btnStartServer.UseVisualStyleBackColor = true;
+            this.btnStartServer.UseVisualStyleBackColor = false;
             this.btnStartServer.Click += new System.EventHandler(this.btnStartServer_Click);
             // 
             // label1
@@ -110,16 +116,50 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Player";
             // 
+            // btnSend
+            // 
+            this.btnSend.Location = new System.Drawing.Point(338, 284);
+            this.btnSend.Name = "btnSend";
+            this.btnSend.Size = new System.Drawing.Size(75, 30);
+            this.btnSend.TabIndex = 5;
+            this.btnSend.Text = "Send";
+            this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(422, 284);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(128, 30);
+            this.btnDelete.TabIndex = 6;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // tbChat
+            // 
+            this.tbChat.Location = new System.Drawing.Point(147, 285);
+            this.tbChat.Multiline = true;
+            this.tbChat.Name = "tbChat";
+            this.tbChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbChat.Size = new System.Drawing.Size(185, 30);
+            this.tbChat.TabIndex = 7;
+            this.tbChat.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbChat_KeyDown);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 338);
+            this.ClientSize = new System.Drawing.Size(565, 320);
+            this.Controls.Add(this.tbChat);
+            this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.btnSend);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnStartServer);
             this.Controls.Add(this.pnlPlayer);
             this.Controls.Add(this.pnlLog);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
@@ -142,6 +182,9 @@
         private System.Windows.Forms.Button btnStartServer;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnSend;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.TextBox tbChat;
     }
 }
 

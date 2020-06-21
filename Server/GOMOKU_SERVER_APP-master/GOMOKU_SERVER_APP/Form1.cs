@@ -2,7 +2,7 @@
 using SocketDataNameSpace;
 using SocketManagerNamespace;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Net.Sockets;
@@ -19,7 +19,7 @@ namespace GOMOKU_SERVER_APP
         private CurrentTime time = new CurrentTime();
 
         //tao mang luu tru thong tin nguoi choi
-        public static ArrayList playerList = new ArrayList();
+        private static List<player> playerList = new List<player>();
 
         public static int numPlayer = 0;
         public static int MAX_PLAYER = 100;
@@ -29,6 +29,8 @@ namespace GOMOKU_SERVER_APP
         public static bool isRunning = false;
 
         private TcpListener listener;
+
+        internal static List<player> PlayerList { get => playerList; set => playerList = value; }
 
         #endregion Properties
 
@@ -41,6 +43,9 @@ namespace GOMOKU_SERVER_APP
 
             tbLog.Enabled = false;
             lbPlayer.Enabled = false;
+            tbChat.Enabled = false;
+            btnSend.Enabled = false;
+            btnDelete.Enabled = false;
         }
 
         #region other method
@@ -54,6 +59,8 @@ namespace GOMOKU_SERVER_APP
         }
 
         #endregion other method
+
+        #region event
 
         private void btnStartServer_Click(object sender, EventArgs e)
         {
@@ -75,7 +82,8 @@ namespace GOMOKU_SERVER_APP
 
                     btnStartServer.Text = "Stop Server";
                     lbPlayer.Enabled = true;
-
+                    tbLog.Enabled = true;
+                    btnStartServer.BackColor = Color.Red;
                     try
                     {
                         while (true)
@@ -94,10 +102,13 @@ namespace GOMOKU_SERVER_APP
                             newPlayer.Player1Socket.playerName = playerData.PlayerName;
                             newPlayer.Status = "WAITING";
                             newPlayer.Player2Socket = null;
-                            
+
                             //xu ly nguoi choi
                             if (addPlayer(newPlayer))
                             {
+                                tbChat.Enabled = true;
+                                btnSend.Enabled = true;
+                                btnDelete.Enabled = true;
                                 //tạo luồng chấp nhận kết nối và thêm vào danh sách người chơi + xử lý
                                 Thread chapNhanKetNoi = new Thread(ClientThread);
                                 chapNhanKetNoi.IsBackground = true;
@@ -121,6 +132,7 @@ namespace GOMOKU_SERVER_APP
                     //dieu chinh giao dien
                     btnStartServer.Text = "Start Server";
                     lbPlayer.Enabled = false;
+                    btnStartServer.BackColor = Color.LimeGreen;
                     try
                     {
                         //stop server, send msg to all client and disconnect
@@ -135,30 +147,163 @@ namespace GOMOKU_SERVER_APP
             thClickButton.Start();
         }
 
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (isRunning)
+            {
+                StopServer();
+                listener.Stop();
+            }
+        }
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            Thread Nhantin = new Thread(() =>
+            {
+                if (tbChat.Enabled == true && tbChat.Text.Trim() != "")
+                {
+                    foreach (object itemList in lbPlayer.SelectedItems)
+                    {
+                        for (int i = 0; i < playerList.Count; i++)
+                        {
+                            if (itemList.ToString() == playerList[i].Player1Socket.client.RemoteEndPoint.ToString() + " - " + playerList[i].Player1Socket.playerName)
+                            {
+                                playerList[i].Player1Socket.Send(new SocketData("", "[SERVER]", (int)SocketCommand.CHAT, tbChat.Text.Trim(), new Point()));
+                            }
+                        }
+                    }
+                    tbChat.Text = "";
+                }
+            });
+            Nhantin.IsBackground = true;
+            Nhantin.Start();
+        }
+
+        private void tbChat_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnSend_Click(null, null);
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            //ngat ket noi
+            for (int i = 0; i < playerList.Count; i++)
+            {
+                for (int j = 0; j < lbPlayer.SelectedItems.Count; j++)
+
+                {
+                    if (playerList[i].Player1Socket.client.RemoteEndPoint + " - " + playerList[i].Player1Socket.playerName == lbPlayer.SelectedItems[j].ToString())
+                    {
+                        if (playerList[i].Player2Socket != null)
+                        {
+                            //thay ddoir trnag thai doi thu
+                            for (int t = 0; t < playerList.Count; t++)
+
+                            {
+                                if (playerList[t].Player2Socket != null)
+                                {
+                                    if (playerList[t].Player2Socket.client == playerList[i].Player1Socket.client)
+                                    {
+                                        playerList[t].Player1Socket.Send(new SocketData("", playerList[t].Player1Socket.playerName, (int)SocketCommand.QUIT, playerList[t].Player2Socket.playerName + " đã thoát! Chờ đối thủ khác!", new Point()));
+                                        playerList[t].Status = "WAITMATCH";
+                                        playerList[t].Player2Socket = null;
+                                        playerList[i].Player2Socket = null;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        //ngat ket noi
+                        lbPlayer.SelectedItems.Remove(lbPlayer.SelectedItems[j]);
+                        playerList[i].Player1Socket.Send(new SocketData("", "[SERVER]", (int)SocketCommand.SERVER_OUT, "Bạn đã bị server ngắt kết nối!", new Point()));
+                        tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + playerList[i].Player1Socket.client.RemoteEndPoint + " - " + playerList[i].Player1Socket.playerName + " DISCONNECTED!");
+                        playerList[i].Player1Socket.client.Close();
+                        playerList[i].Status = "DELETE";
+                        break;
+                    }
+                }
+            }
+            //cap nhat giao dien
+            int index = 0;
+            bool check = false;
+            do
+            {
+                if (playerList[index].Status == "DELETE")
+                {
+                    playerList.Remove(playerList[index]);
+                    check = true;
+                }
+                else check = false;
+
+                if (check)
+                {
+                    continue;
+                }
+                else
+                {
+                    index++;
+                }
+            } while (index < playerList.Count);
+            lbPlayer.Items.Clear();
+
+            if (playerList.Count != 0)
+            {
+                for (int i = 0; i < playerList.Count; i++)
+                {
+                    lbPlayer.Items.Add(playerList[i].Player1Socket.client.RemoteEndPoint.ToString() + " - " + playerList[i].Player1Socket.playerName);
+                }
+
+                //match player khac
+                for (int i = 0; i < playerList.Count; i++)
+                {
+                    if (playerList[i].Status == "WAITMATCH")
+                    {
+                        playerList[i].Status = "WAITING";
+                        matchPlayerAfter(playerList[i]);
+                    }
+                }
+            }
+        }
+
+        private void lbPlayer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                btnDelete_Click(null, null);
+            }
+        }
+
+        #endregion event
+
         private void matchPlayer(player newPlayer)
         {
             bool checkMatch = false;
             try
             {
                 //tim va luu thong tin doi thu
-                foreach (player playerTemp in playerList)
+                for (int i = 0; i < playerList.Count; i++)
+
                 {
                     //neu gap player dang doi
-                    if (newPlayer.Player1Socket.client != playerTemp.Player1Socket.client && playerTemp.Status == "WAITING")
+                    if (newPlayer.Player1Socket.client != playerList[i].Player1Socket.client && playerList[i].Status == "WAITING")
                     {
                         checkMatch = true;
                         //thay doi trang thai của player 1 (player đang đợi)
-                        playerTemp.Status = "MATCHED1";
-                        playerTemp.Player2Socket = newPlayer.Player1Socket;
+                        playerList[i].Status = "MATCHED1";
+                        playerList[i].Player2Socket = newPlayer.Player1Socket;
 
                         //tìm và thay đổi thông tin player 2 (player mới kết nối đến)
-                        foreach (player playerTemp1 in playerList)
+                        for (int j = 0; j < playerList.Count; j++)
                         {
-                            if (newPlayer.Player1Socket.client == playerTemp1.Player1Socket.client)
+                            if (newPlayer.Player1Socket.client == playerList[j].Player1Socket.client)
                             {
-                                playerTemp1.Status = "MATCHED2";
-                                playerTemp1.Player2Socket = playerTemp.Player1Socket;
-                                tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + playerTemp1.Player2Socket.client.RemoteEndPoint + " - " + playerTemp1.Player2Socket.playerName + "  matched to  " + playerTemp1.Player1Socket.client.RemoteEndPoint + " - " + playerTemp1.Player1Socket.playerName);
+                                playerList[j].Status = "MATCHED2";
+                                playerList[j].Player2Socket = playerList[i].Player1Socket;
+                                tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + playerList[j].Player2Socket.client.RemoteEndPoint + " - " + playerList[j].Player2Socket.playerName + "  matched to  " + playerList[j].Player1Socket.client.RemoteEndPoint + " - " + playerList[j].Player1Socket.playerName);
                                 break;
                             }
                         }
@@ -168,7 +313,6 @@ namespace GOMOKU_SERVER_APP
 
                 if (!checkMatch)
                 {
-                    
                     tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + newPlayer.Player1Socket.client.RemoteEndPoint + " - " + newPlayer.Player1Socket.playerName + " WAITING...");
                 }
                 //thong bao cho client
@@ -194,24 +338,26 @@ namespace GOMOKU_SERVER_APP
             try
             {
                 //tim va luu thong tin doi thu
-                foreach (player playerTemp in playerList)
+                for (int i = 0; i < playerList.Count; i++)
+
                 {
                     //neu gap player dang doi
-                    if (newPlayer.Player1Socket.client != playerTemp.Player1Socket.client && playerTemp.Status == "WAITING")
+                    if (newPlayer.Player1Socket.client != playerList[i].Player1Socket.client && playerList[i].Status == "WAITING")
                     {
                         checkMatch = true;
                         //thay doi trang thai của player 1 (player đang đợi)
-                        playerTemp.Status = "MATCHED1";
-                        playerTemp.Player2Socket = newPlayer.Player1Socket;
+                        playerList[i].Status = "MATCHED1";
+                        playerList[i].Player2Socket = newPlayer.Player1Socket;
 
                         //tìm và thay đổi thông tin player 2 (player mới kết nối đến)
-                        foreach (player playerTemp1 in playerList)
+                        for (int j = 0; j < playerList.Count; j++)
+
                         {
-                            if (newPlayer.Player1Socket.client == playerTemp1.Player1Socket.client)
+                            if (newPlayer.Player1Socket.client == playerList[j].Player1Socket.client)
                             {
-                                playerTemp1.Status = "MATCHED2";
-                                playerTemp1.Player2Socket = playerTemp.Player1Socket;
-                                tbLog.AppendText("[" + time.getCurrentTime() + "]: \r\n" + playerTemp1.Player2Socket.client.RemoteEndPoint + " - " + playerTemp1.Player2Socket.playerName + "  matched to  " + playerTemp1.Player1Socket.client.RemoteEndPoint + " - " + playerTemp1.Player1Socket.playerName);
+                                playerList[j].Status = "MATCHED2";
+                                playerList[j].Player2Socket = playerList[i].Player1Socket;
+                                tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + playerList[j].Player2Socket.client.RemoteEndPoint + " - " + playerList[j].Player2Socket.playerName + "  matched to  " + playerList[j].Player1Socket.client.RemoteEndPoint + " - " + playerList[j].Player1Socket.playerName);
                                 break;
                             }
                         }
@@ -265,32 +411,46 @@ namespace GOMOKU_SERVER_APP
             if (deletePlayer.Player2Socket != null)
             {
                 //cap nhat trang thai doi thu
-                foreach (player curPlayer in playerList)
-                {
-                    if (curPlayer.Player1Socket.client == deletePlayer.Player2Socket.client)
-                    {
-                        curPlayer.Status = "WAITING";
-                        //gui cho doi thu
-                        curPlayer.Player1Socket.Send(new SocketData("", curPlayer.Player1Socket.playerName, (int)SocketCommand.QUIT, curPlayer.Player2Socket.playerName + " đã thoát! Chờ đối thủ khác!", new Point()));
+                for (int i = 0; i < playerList.Count; i++)
 
-                        curPlayer.Player2Socket = null;
-                        matchPlayerAfter(curPlayer);
+                {
+                    if (playerList[i].Player1Socket.client == deletePlayer.Player2Socket.client)
+                    {
+                        playerList[i].Status = "WAITING";
+                        //gui cho doi thu
+                        playerList[i].Player1Socket.Send(new SocketData("", playerList[i].Player1Socket.playerName, (int)SocketCommand.QUIT, playerList[i].Player2Socket.playerName + " đã thoát! Chờ đối thủ khác!", new Point()));
+
+                        playerList[i].Player2Socket = null;
+                        matchPlayerAfter(playerList[i]);
                         break;
                     }
                 }
             }
 
-            foreach (player curPlayer in playerList)
+            for (int i = 0; i < playerList.Count; i++)
             {
-                if (curPlayer == deletePlayer)
+                if (playerList[i] == deletePlayer)
                 {
                     //ngat ket noi
-                    deletePlayer.Player1Socket.client.Close();
+                    try
+                    {
+                        deletePlayer.Player1Socket.client.Close();
+                    }
+                    catch
+                    {
+                    }
+
                     //xoa khoi danh sach
-                    playerList.Remove(curPlayer);
+                    playerList.Remove(playerList[i]);
                     numPlayer--;
                     break;
                 }
+            }
+            if (numPlayer == 0)
+            {
+                tbChat.Enabled = false;
+                btnSend.Enabled = false;
+                btnDelete.Enabled = false;
             }
         }
 
@@ -345,10 +505,11 @@ namespace GOMOKU_SERVER_APP
             try
             {
                 //gui tin nhan
-                foreach (player playerTemp1 in playerList)
+                for (int i = 0; i < playerList.Count; i++)
+
                 {
-                    playerTemp1.Player1Socket.Send(new SocketData("", playerTemp1.Player1Socket.playerName, (int)SocketCommand.SERVER_OUT, "Server đã tắt, bạn bị ngắt kết nối", new Point()));
-                    playerTemp1.Player1Socket.client.Close();
+                    playerList[i].Player1Socket.Send(new SocketData("", playerList[i].Player1Socket.playerName, (int)SocketCommand.SERVER_OUT, "Server đã tắt, bạn bị ngắt kết nối", new Point()));
+                    playerList[i].Player1Socket.client.Close();
                 }
                 playerList.Clear();
 
@@ -360,15 +521,6 @@ namespace GOMOKU_SERVER_APP
             }
             catch (Exception)
             {
-            }
-        }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (isRunning)
-            {
-                StopServer();
-                listener.Stop();
             }
         }
     }
