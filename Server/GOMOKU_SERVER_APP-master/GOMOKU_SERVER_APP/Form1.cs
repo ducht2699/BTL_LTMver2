@@ -46,6 +46,9 @@ namespace GOMOKU_SERVER_APP
             tbChat.Enabled = false;
             btnSend.Enabled = false;
             btnDelete.Enabled = false;
+            panel2.Enabled = false;
+            btnDetails.Enabled = false;
+            this.Size = new Size(585, 380);
         }
 
         #region other method
@@ -109,6 +112,7 @@ namespace GOMOKU_SERVER_APP
                                 tbChat.Enabled = true;
                                 btnSend.Enabled = true;
                                 btnDelete.Enabled = true;
+                                btnDetails.Enabled = true;
                                 //tạo luồng chấp nhận kết nối và thêm vào danh sách người chơi + xử lý
                                 Thread chapNhanKetNoi = new Thread(ClientThread);
                                 chapNhanKetNoi.IsBackground = true;
@@ -189,6 +193,7 @@ namespace GOMOKU_SERVER_APP
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            this.Size = new Size(585, 380);
             //ngat ket noi
             for (int i = 0; i < playerList.Count; i++)
             {
@@ -263,6 +268,7 @@ namespace GOMOKU_SERVER_APP
                     if (playerList[i].Status == "WAITMATCH")
                     {
                         playerList[i].Status = "WAITING";
+                        
                         matchPlayerAfter(playerList[i]);
                     }
                 }
@@ -275,10 +281,117 @@ namespace GOMOKU_SERVER_APP
             {
                 btnDelete_Click(null, null);
             }
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnDetails_Click(null, null);
+            }
         }
 
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Size = new Size(585, 380);
+        }
+
+        private void btnDetails_Click(object sender, EventArgs e)
+        {
+            if (lbPlayer.SelectedItem != null && lbPlayer.SelectedItems.Count == 1)
+            {
+                this.Size = new Size(951, 380);
+                updateImage();
+                updateDetails();
+            }
+            else
+            {
+                tbLog.AppendText("\r\nERROR!!! Select 1 player only!");
+            }
+        }
+        private void lbPlayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lbPlayer.SelectedItems.Count > 1)
+            {
+                this.Size = new Size(585, 380);
+            }
+            else
+            {
+                updateDetails();
+            }
+            
+        }
         #endregion event
 
+        #region done method
+
+        public void updateDetails()
+        {
+            if (this.Size == new Size(951, 380) && lbPlayer.SelectedItems.Count == 1)
+            {
+                for (int i = 0; i < playerList.Count; i++)
+                {
+                    if (playerList[i].Player1Socket.client.RemoteEndPoint + " - " + playerList[i].Player1Socket.playerName == lbPlayer.SelectedItem.ToString())
+                    {
+                        labelName.Text = playerList[i].Player1Socket.playerName;
+                        labelSocket.Text = playerList[i].Player1Socket.client.RemoteEndPoint.ToString();
+                        labelStatus.Text = playerList[i].Status;
+                        if (playerList[i].Player1Socket.isPlayer1)
+                        {
+                            ptbMark.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\O_image.png");
+                        }
+                        else
+                        {
+                            ptbMark.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\X_image.png");
+                        }
+                        if (playerList[i].Player2Socket != null)
+                        {
+                            panel2.Enabled = true;
+                            labelNameRival.Text = playerList[i].Player2Socket.playerName;
+                            labelSocketRival.Text = playerList[i].Player2Socket.client.RemoteEndPoint.ToString();
+                            for (int j = 0; j < playerList.Count; j++)
+                            {
+                                if (playerList[i].Player2Socket.client == playerList[j].Player1Socket.client)
+                                {
+                                    labelStatusRival.Text = playerList[j].Status;
+                                    if (playerList[j].Player1Socket.isPlayer1)
+                                    {
+                                        ptbMarkRival.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\O_image.png");
+                                    }
+                                    else
+                                    {
+                                        ptbMarkRival.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\X_image.png");
+                                    }
+                                }
+                                
+                            }
+                        }
+                        else
+                        {
+                            ptbMarkRival.BackgroundImage = null ;
+                            panel2.Enabled = false;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        public void updateImage()
+        {
+            for (int i = 0; i < playerList.Count; i++)
+            {
+                if (playerList[i].Status == "MATCH1")
+                {
+                    playerList[i].Player1Socket.isPlayer1 = true;
+                    playerList[i].Player2Socket.isPlayer1 = false;
+                }
+                else
+                if (playerList[i].Status == "MATCH2")
+                {
+                    playerList[i].Player2Socket.isPlayer1 = true;
+                    playerList[i].Player1Socket.isPlayer1 = false;
+                }
+            }
+        }
         private void matchPlayer(player newPlayer)
         {
             bool checkMatch = false;
@@ -294,6 +407,7 @@ namespace GOMOKU_SERVER_APP
                         checkMatch = true;
                         //thay doi trang thai của player 1 (player đang đợi)
                         playerList[i].Status = "MATCHED1";
+                        playerList[i].Player1Socket.isPlayer1 = true;
                         playerList[i].Player2Socket = newPlayer.Player1Socket;
 
                         //tìm và thay đổi thông tin player 2 (player mới kết nối đến)
@@ -302,6 +416,7 @@ namespace GOMOKU_SERVER_APP
                             if (newPlayer.Player1Socket.client == playerList[j].Player1Socket.client)
                             {
                                 playerList[j].Status = "MATCHED2";
+                                playerList[j].Player1Socket.isPlayer1 = false;
                                 playerList[j].Player2Socket = playerList[i].Player1Socket;
                                 tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + playerList[j].Player2Socket.client.RemoteEndPoint + " - " + playerList[j].Player2Socket.playerName + "  matched to  " + playerList[j].Player1Socket.client.RemoteEndPoint + " - " + playerList[j].Player1Socket.playerName);
                                 break;
@@ -325,6 +440,8 @@ namespace GOMOKU_SERVER_APP
                     newPlayer.Player1Socket.Send(new SocketData(newPlayer.Player1Socket.client.RemoteEndPoint.ToString(), newPlayer.Player1Socket.playerName, (int)SocketCommand.PLAYER2, "Đã kết nối với \"" + newPlayer.Player2Socket.playerName + "\", chờ đối thủ đánh trước!", new Point()));
                     newPlayer.Player2Socket.Send(new SocketData(newPlayer.Player2Socket.client.RemoteEndPoint.ToString(), newPlayer.Player2Socket.playerName, (int)SocketCommand.PLAYER1, "Đã kết nối với \"" + newPlayer.Player1Socket.playerName + "\", mời bạn đánh trước!", new Point()));
                 }
+                updateImage();
+                updateDetails();
             }
             catch (Exception)
             {
@@ -347,6 +464,7 @@ namespace GOMOKU_SERVER_APP
                         checkMatch = true;
                         //thay doi trang thai của player 1 (player đang đợi)
                         playerList[i].Status = "MATCHED1";
+                        playerList[i].Player1Socket.isPlayer1 = true;
                         playerList[i].Player2Socket = newPlayer.Player1Socket;
 
                         //tìm và thay đổi thông tin player 2 (player mới kết nối đến)
@@ -356,6 +474,7 @@ namespace GOMOKU_SERVER_APP
                             if (newPlayer.Player1Socket.client == playerList[j].Player1Socket.client)
                             {
                                 playerList[j].Status = "MATCHED2";
+                                playerList[j].Player1Socket.isPlayer1 = false;
                                 playerList[j].Player2Socket = playerList[i].Player1Socket;
                                 tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + playerList[j].Player2Socket.client.RemoteEndPoint + " - " + playerList[j].Player2Socket.playerName + "  matched to  " + playerList[j].Player1Socket.client.RemoteEndPoint + " - " + playerList[j].Player1Socket.playerName);
                                 break;
@@ -377,6 +496,8 @@ namespace GOMOKU_SERVER_APP
                     newPlayer.Player1Socket.Send(new SocketData(newPlayer.Player1Socket.client.RemoteEndPoint.ToString(), newPlayer.Player1Socket.playerName, (int)SocketCommand.PLAYER2, "Đã kết nối với \"" + newPlayer.Player2Socket.playerName + "\", chờ đối thủ đánh trước!", new Point()));
                     newPlayer.Player2Socket.Send(new SocketData(newPlayer.Player2Socket.client.RemoteEndPoint.ToString(), newPlayer.Player2Socket.playerName, (int)SocketCommand.PLAYER1, "Đã kết nối với \"" + newPlayer.Player1Socket.playerName + "\", mời bạn đánh trước!", new Point()));
                 }
+                updateImage();
+                updateDetails();
             }
             catch (Exception)
             {
@@ -402,6 +523,8 @@ namespace GOMOKU_SERVER_APP
                 //xu ly trang thai
 
                 lbPlayer.Items.Add(newPlayer.Player1Socket.client.RemoteEndPoint.ToString() + " - " + newPlayer.Player1Socket.playerName);
+                updateImage();
+                updateDetails();
             }
             return check;
         }
@@ -421,13 +544,14 @@ namespace GOMOKU_SERVER_APP
                         playerList[i].Player1Socket.Send(new SocketData("", playerList[i].Player1Socket.playerName, (int)SocketCommand.QUIT, playerList[i].Player2Socket.playerName + " đã thoát! Chờ đối thủ khác!", new Point()));
 
                         playerList[i].Player2Socket = null;
+
                         matchPlayerAfter(playerList[i]);
                         break;
                     }
                 }
             }
 
-            for (int i = 0; i < playerList.Count; i++)
+           for (int i = 0; i < playerList.Count; i++)
             {
                 if (playerList[i] == deletePlayer)
                 {
@@ -446,11 +570,22 @@ namespace GOMOKU_SERVER_APP
                     break;
                 }
             }
-            if (numPlayer == 0)
+
+            if (playerList.Count == 0)
             {
                 tbChat.Enabled = false;
                 btnSend.Enabled = false;
                 btnDelete.Enabled = false;
+                btnDetails.Enabled = false;
+            }
+
+            if (lbPlayer.SelectedItem == null)
+            {
+                this.Size = new Size(585, 380);
+            }
+            else
+            {
+                updateDetails();
             }
         }
 
@@ -475,9 +610,12 @@ namespace GOMOKU_SERVER_APP
                         {
                             if (item == newPlayer.Player1Socket.client.RemoteEndPoint.ToString() + " - " + newPlayer.Player1Socket.playerName)
                             {
+                                
+                                
                                 lbPlayer.Items.Remove(item);
                                 //xoa khoi danh sach
                                 erasePlayer(newPlayer);
+
                                 break;
                             }
                         }
@@ -518,10 +656,15 @@ namespace GOMOKU_SERVER_APP
 
                 //stop server
                 listener.Stop();
+                this.Size = new Size(585, 380);
             }
             catch (Exception)
             {
             }
         }
+
+        #endregion done method
+
+
     }
 }
