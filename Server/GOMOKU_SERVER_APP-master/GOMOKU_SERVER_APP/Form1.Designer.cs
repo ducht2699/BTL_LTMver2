@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pnlLog = new System.Windows.Forms.Panel();
+            this.tbLog = new System.Windows.Forms.TextBox();
             this.pnlInformation = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnBack = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelSocket = new System.Windows.Forms.Label();
@@ -53,7 +53,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.tbLog = new System.Windows.Forms.TextBox();
+            this.btnBack = new System.Windows.Forms.Button();
             this.pnlPlayer = new System.Windows.Forms.Panel();
             this.lbPlayer = new System.Windows.Forms.ListBox();
             this.btnStartServer = new System.Windows.Forms.Button();
@@ -82,6 +82,19 @@
             this.pnlLog.TabIndex = 0;
             this.pnlLog.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
+            // tbLog
+            // 
+            this.tbLog.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbLog.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tbLog.Location = new System.Drawing.Point(3, 3);
+            this.tbLog.Multiline = true;
+            this.tbLog.Name = "tbLog";
+            this.tbLog.ReadOnly = true;
+            this.tbLog.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbLog.Size = new System.Drawing.Size(398, 238);
+            this.tbLog.TabIndex = 0;
+            // 
             // pnlInformation
             // 
             this.pnlInformation.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -103,16 +116,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(41, 27);
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
-            // 
-            // btnBack
-            // 
-            this.btnBack.Location = new System.Drawing.Point(725, 293);
-            this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(41, 22);
-            this.btnBack.TabIndex = 5;
-            this.btnBack.Text = "<<";
-            this.btnBack.UseVisualStyleBackColor = true;
-            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // panel1
             // 
@@ -320,19 +323,15 @@
             this.label7.TabIndex = 2;
             this.label7.Text = "Name:";
             // 
-            // tbLog
+            // btnBack
             // 
-            this.tbLog.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tbLog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.tbLog.Location = new System.Drawing.Point(3, 3);
-            this.tbLog.Multiline = true;
-            this.tbLog.Name = "tbLog";
-            this.tbLog.ReadOnly = true;
-            this.tbLog.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLog.Size = new System.Drawing.Size(398, 238);
-            this.tbLog.TabIndex = 0;
-            this.tbLog.TextChanged += new System.EventHandler(this.tbLog_TextChanged);
+            this.btnBack.Location = new System.Drawing.Point(725, 293);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(41, 22);
+            this.btnBack.TabIndex = 5;
+            this.btnBack.Text = "<<";
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // pnlPlayer
             // 

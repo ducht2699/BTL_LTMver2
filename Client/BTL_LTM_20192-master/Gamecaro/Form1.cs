@@ -39,8 +39,6 @@ namespace Gamecaro
             btnSendChat.Enabled = false;
             tbChat.Enabled = false;
             newGameToolStripMenuItem.Enabled = false;
-
-            
         }
 
         #region Player function
@@ -92,10 +90,6 @@ namespace Gamecaro
             Quit();
         }
 
-        #endregion game function
-
-        #region close app
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -105,7 +99,12 @@ namespace Gamecaro
             catch { }
         }
 
-        #endregion close app
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            txbIP.Text = "127.0.0.1";
+        }
+
+        #endregion game function
 
         #region event
 
@@ -167,6 +166,7 @@ namespace Gamecaro
                 tbChat.Text = "";
             }
         }
+
         private void txbPlayerName_KeyDown(object sender, KeyEventArgs e)
         {
             if (txbPlayerName.Enabled == true && e.KeyCode == Keys.Enter)
@@ -174,6 +174,7 @@ namespace Gamecaro
                 btnLAN_Click(null, null);
             }
         }
+
         private void tbChat_KeyDown(object sender, KeyEventArgs e)
         {
             if (tbChat.Enabled == true && e.KeyCode == Keys.Enter)
@@ -181,12 +182,8 @@ namespace Gamecaro
                 btnSendChat_Click(null, null);
             }
         }
-        #endregion event
 
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            txbIP.Text = "127.0.0.1";
-        }
+        #endregion event
 
         private void Listen()
         {
@@ -210,7 +207,6 @@ namespace Gamecaro
         {
             switch (data.Command)
             {
-                //new
                 case (int)SocketCommand.WAITING:
                     tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + data.Message);
                     txbIP.Text = data.PlayerSocket;
@@ -270,7 +266,6 @@ namespace Gamecaro
                     isConnect = false;
                     break;
 
-                //old
                 case (int)SocketCommand.NOTIFY:
                     tbLog.AppendText("\r\n[" + time.getCurrentTime() + "]: " + data.Message);
                     break;
@@ -312,11 +307,6 @@ namespace Gamecaro
             }
 
             Listen();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -293,10 +293,7 @@ namespace Gamecaro
 
         #endregion check end game
 
-        //danh dau
 
-
-        //thay doi ten/bieu tuong nguoi choi
 
         #endregion Methods
     }

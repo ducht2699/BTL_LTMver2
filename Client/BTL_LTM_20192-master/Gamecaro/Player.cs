@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Gamecaro
 {
@@ -11,17 +6,18 @@ namespace Gamecaro
     {
         private string name; // Ctrl + R + E
 
-        public string Name 
+        public string Name
         {
-            get => name; 
+            get => name;
             set => name = value;
         }
-       
+
         private Image mark;
-        public Image Mark 
-        { 
-            get => mark; 
-            set => mark = value; 
+
+        public Image Mark
+        {
+            get => mark;
+            set => mark = value;
         }
 
         public Player(string name, Image mark)

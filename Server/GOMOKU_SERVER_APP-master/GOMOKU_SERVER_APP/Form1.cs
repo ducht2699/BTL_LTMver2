@@ -57,10 +57,6 @@ namespace GOMOKU_SERVER_APP
         {
         }
 
-        private void tbLog_TextChanged(object sender, EventArgs e)
-        {
-        }
-
         #endregion other method
 
         #region event
@@ -268,7 +264,7 @@ namespace GOMOKU_SERVER_APP
                     if (playerList[i].Status == "WAITMATCH")
                     {
                         playerList[i].Status = "WAITING";
-                        
+
                         matchPlayerAfter(playerList[i]);
                     }
                 }
@@ -305,6 +301,7 @@ namespace GOMOKU_SERVER_APP
                 tbLog.AppendText("\r\nERROR!!! Select 1 player only!");
             }
         }
+
         private void lbPlayer_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbPlayer.SelectedItems.Count > 1)
@@ -315,8 +312,8 @@ namespace GOMOKU_SERVER_APP
             {
                 updateDetails();
             }
-            
         }
+
         #endregion event
 
         #region done method
@@ -359,12 +356,11 @@ namespace GOMOKU_SERVER_APP
                                         ptbMarkRival.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\X_image.png");
                                     }
                                 }
-                                
                             }
                         }
                         else
                         {
-                            ptbMarkRival.BackgroundImage = null ;
+                            ptbMarkRival.BackgroundImage = null;
                             panel2.Enabled = false;
                         }
 
@@ -372,7 +368,6 @@ namespace GOMOKU_SERVER_APP
                     }
                 }
             }
-
         }
 
         public void updateImage()
@@ -392,6 +387,7 @@ namespace GOMOKU_SERVER_APP
                 }
             }
         }
+
         private void matchPlayer(player newPlayer)
         {
             bool checkMatch = false;
@@ -551,7 +547,7 @@ namespace GOMOKU_SERVER_APP
                 }
             }
 
-           for (int i = 0; i < playerList.Count; i++)
+            for (int i = 0; i < playerList.Count; i++)
             {
                 if (playerList[i] == deletePlayer)
                 {
@@ -610,8 +606,6 @@ namespace GOMOKU_SERVER_APP
                         {
                             if (item == newPlayer.Player1Socket.client.RemoteEndPoint.ToString() + " - " + newPlayer.Player1Socket.playerName)
                             {
-                                
-                                
                                 lbPlayer.Items.Remove(item);
                                 //xoa khoi danh sach
                                 erasePlayer(newPlayer);
@@ -664,7 +658,5 @@ namespace GOMOKU_SERVER_APP
         }
 
         #endregion done method
-
-
     }
 }
